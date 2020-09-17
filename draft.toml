@@ -1,6 +1,6 @@
 [environments]
   [environments.development]
-    name = "apm-nodejs-app-a"
+    name = "apm-nodejs-app-b"
     namespace = "default"
     wait = true
     watch = false

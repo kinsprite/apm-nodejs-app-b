@@ -1,4 +1,4 @@
 apiVersion: v1
 description: A Helm chart for Kubernetes
-name: apm-nodejs-app-a
+name: apm-nodejs-app-b
 version: v0.1.0
