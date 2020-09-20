@@ -45,7 +45,7 @@ app.get('/api/:msg', async function (req, res, next) {
       b: req.params.msg,
       c1: resAll[0].data,
       c2: resAll[1].data,
-      c3,
+      c3: c3.data,
     });
   }
   catch (err) {
