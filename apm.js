@@ -1,4 +1,6 @@
 const agent = require('elastic-apm-node');
+
+/** @type {agent} */
 let apm = null;
 
 function startAPM() {

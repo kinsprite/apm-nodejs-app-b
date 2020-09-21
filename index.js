@@ -1,8 +1,10 @@
 
-require('./apm').startAPM();
+const { startAPM, getAPM } = require('./apm');
+startAPM();
 
 const axios = require('axios').default;
 const app = require('express')();
+const { ApmContext } = require('./apmContext');
 
 function logErrors (err, req, res, next) {
   console.error(err.stack);
@@ -39,7 +41,51 @@ app.get('/api/:msg', async function (req, res, next) {
       axios.get('http://apm-nodejs-app-c:8080/api/hello-b-c-2'),
     ]);
 
-    const c3 = await axios.get('http://apm-nodejs-app-c:8080/api/hello-b-c-3');
+    const amp = getAPM();
+    const apmContext = new ApmContext();
+
+    // outer span
+    const spanOuter = amp.startSpan();
+
+    let num = 0;
+
+    for (let i = 0; i < 1000; i++) {
+      for (let j = 0; j < 1000; j++) {
+        num += i + j;
+      }
+    }
+
+    // inner span
+    const spanInner = amp.startSpan();
+
+    for (let i = 0; i < 1000; i++) {
+      for (let j = 0; j < 1000; j++) {
+        num += i + j;
+      }
+    }
+
+    if (spanInner) {
+      spanInner.end();
+    }
+
+    // end inner span
+
+    let c3;
+
+    try {
+      c3 = await axios.get('http://apm-nodejs-app-c:8080/api/hello-b-c-3');
+    }
+    catch (e) {
+      throw e;
+    }
+    finally {
+      if (spanOuter) {
+        spanOuter.end();
+      }
+    }
+
+    // recover old span
+    apmContext.active();
 
     res.send({
       b: req.params.msg,
