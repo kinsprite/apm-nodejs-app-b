@@ -45,7 +45,7 @@ app.get('/api/:msg', async function (req, res, next) {
     const apmContext = new ApmContext();
 
     // outer span
-    const spanOuter = amp.startSpan();
+    const spanOuter = amp.startSpan('outer');
 
     let num = 0;
 
@@ -56,7 +56,7 @@ app.get('/api/:msg', async function (req, res, next) {
     }
 
     // inner span
-    const spanInner = amp.startSpan();
+    const spanInner = amp.startSpan('inner');
 
     for (let i = 0; i < 1000; i++) {
       for (let j = 0; j < 1000; j++) {
